@@ -37,7 +37,7 @@ const MyPlanPage = () => {
     const [activeTab, setActiveTab] = useState<ActiveTab>("plan");
     const [sortBy, setSortBy] = useState<SortOption>("duration");
 
-    // পেজ লোড বা হ্যাশ চেঞ্জের সময় চেক করবে Saved এ যেতে হবে কিনা
+   
     useEffect(() => {
         const checkHash = () => {
             if (window.location.hash === "#saved") {

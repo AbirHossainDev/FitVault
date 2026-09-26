@@ -97,7 +97,7 @@ const Navbar = () => {
                         </span>
                     </Link>
 
-                    {/* Saved-এ ক্লিক করলে সরাসরি saved ট্যাবে যাবে */}
+                    {/* Saved*/}
                     <Link
                         href="/my-plan?tab=saved"
                         className="flex items-center gap-2 text-xs font-medium text-[#d0d1d4] transition hover:text-white"
@@ -124,7 +124,7 @@ const Navbar = () => {
                         </span>
                     </Link>
 
-                    {/* Mobile Saved-এ ক্লিক করলে saved ট্যাবে যাবে */}
+                    {/* Mobile Saved*/}
                     <Link
                         href="/my-plan?tab=saved"
                         aria-label={`Saved workouts: ${saved.length}`}
