@@ -87,9 +87,6 @@ export const PlanProvider = ({
     >([]);
     const [hydrated, setHydrated] = useState(false);
 
-    /*
-     * Restore all saved state from localStorage.
-     */
     useEffect(() => {
         const timer = window.setTimeout(() => {
             const storedPlan = getStoredData<Workout[]>(
@@ -121,13 +118,16 @@ export const PlanProvider = ({
 
             const today = getTodayKey();
 
-            setPlan(storedPlan);
+            // ভ্যালুগুলো রিড করার সময় সংখ্যা নিশ্চিত করা হচ্ছে যাতে 0 বা NaN না আসে
+            const sanitizedPlan = storedPlan.map((item) => ({
+                ...item,
+                duration: Number(item.duration) || 0,
+                caloriesBurned: Number(item.caloriesBurned) || 0,
+            }));
+
+            setPlan(sanitizedPlan);
             setSaved(storedSaved);
 
-            /*
-             * Today's completion state resets when a new day starts.
-             * Historical records remain untouched.
-             */
             setCompleted(
                 storedCompletedDate === today
                     ? storedCompleted
@@ -139,8 +139,8 @@ export const PlanProvider = ({
                     id: item.id,
                     name: item.name ?? "",
                     date: item.date,
-                    duration: item.duration,
-                    calories: item.calories,
+                    duration: Number(item.duration) || 0,
+                    calories: Number(item.calories) || 0,
                 }))
             );
 
@@ -152,9 +152,6 @@ export const PlanProvider = ({
         };
     }, []);
 
-    /*
-     * Persist today's plan.
-     */
     useEffect(() => {
         if (!hydrated) return;
 
@@ -164,9 +161,6 @@ export const PlanProvider = ({
         );
     }, [plan, hydrated]);
 
-    /*
-     * Persist saved workouts.
-     */
     useEffect(() => {
         if (!hydrated) return;
 
@@ -176,9 +170,6 @@ export const PlanProvider = ({
         );
     }, [saved, hydrated]);
 
-    /*
-     * Persist today's completed workout IDs.
-     */
     useEffect(() => {
         if (!hydrated) return;
 
@@ -193,9 +184,6 @@ export const PlanProvider = ({
         );
     }, [completed, hydrated]);
 
-    /*
-     * Persist permanent workout history.
-     */
     useEffect(() => {
         if (!hydrated) return;
 
@@ -205,10 +193,6 @@ export const PlanProvider = ({
         );
     }, [completionHistory, hydrated]);
 
-    /*
-     * Migrate older workout history records that were saved
-     * without a workout name.
-     */
     useEffect(() => {
         if (!hydrated) return;
 
@@ -274,7 +258,7 @@ export const PlanProvider = ({
 
     /*
      * Add workout to today's plan.
-     * Maximum: 5 workouts.
+     * ৫টি কার্ডের লিমিট এখান থেকে চিরতরে সরিয়ে দেওয়া হয়েছে।
      */
     const addToPlan = (workout: Workout) => {
         setPlan((currentPlan) => {
@@ -286,18 +270,16 @@ export const PlanProvider = ({
                 return currentPlan;
             }
 
-            if (currentPlan.length >= 5) {
-                return currentPlan;
-            }
+            const sanitizedWorkout = {
+                ...workout,
+                duration: Number(workout.duration) || 0,
+                caloriesBurned: Number(workout.caloriesBurned) || 0,
+            };
 
-            return [...currentPlan, workout];
+            return [...currentPlan, sanitizedWorkout];
         });
     };
 
-    /*
-     * Save workout for later.
-     * Duplicate saved workouts are ignored.
-     */
     const addToSaved = (workout: Workout) => {
         setSaved((currentSaved) => {
             const alreadyExists = currentSaved.some(
@@ -312,9 +294,6 @@ export const PlanProvider = ({
         });
     };
 
-    /*
-     * Remove workout from today's plan.
-     */
     const removeFromPlan = (id: string) => {
         setPlan((currentPlan) =>
             currentPlan.filter(
@@ -322,12 +301,6 @@ export const PlanProvider = ({
             )
         );
 
-        /*
-         * Removing a workout from today's plan also removes
-         * its current-day completion state.
-         *
-         * Permanent workout history is intentionally preserved.
-         */
         setCompleted((currentCompleted) =>
             currentCompleted.filter(
                 (itemId) => itemId !== id
@@ -335,9 +308,6 @@ export const PlanProvider = ({
         );
     };
 
-    /*
-     * Remove workout from saved list.
-     */
     const removeFromSaved = (id: string) => {
         setSaved((currentSaved) =>
             currentSaved.filter(
@@ -346,9 +316,6 @@ export const PlanProvider = ({
         );
     };
 
-    /*
-     * Mark workout as completed today.
-     */
     const markAsDone = (id: string) => {
         const today = getTodayKey();
 
@@ -386,8 +353,8 @@ export const PlanProvider = ({
                         id: workout.id,
                         name: workout.name,
                         date: today,
-                        duration: workout.duration,
-                        calories: workout.caloriesBurned,
+                        duration: Number(workout.duration) || 0,
+                        calories: Number(workout.caloriesBurned) || 0,
                     },
                 ];
             });
@@ -396,11 +363,6 @@ export const PlanProvider = ({
         });
     };
 
-    /*
-     * Undo today's completion.
-     *
-     * Permanent historical records are only removed for today.
-     */
     const undoAsDone = (id: string) => {
         const today = getTodayKey();
 

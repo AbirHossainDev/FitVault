@@ -10,18 +10,30 @@ type PageProps = {
 };
 
 async function getWorkout(id: string): Promise<Workout | null> {
-    const res = await fetch(
-        `https://api.abcz.workers.dev/api/fitlog/${id}`,
-        {
-            cache: "no-store",
-        }
-    );
+    try {
+        const res = await fetch(
+            `https://api.api-store.workers.dev/api/fitlog/${id}`,
+            {
+                cache: "no-store",
+            }
+        );
 
-    if (!res.ok) {
+        if (!res.ok) {
+            return null;
+        }
+
+        const data = await res.json();
+
+        return {
+            ...data,
+            id: String(data.id),
+            title: data.name,
+            category: data.muscleGroups,
+        };
+    } catch (error) {
+        console.error("Failed to fetch workout details:", error);
         return null;
     }
-
-    return res.json();
 }
 
 export async function generateMetadata({
@@ -37,7 +49,7 @@ export async function generateMetadata({
     }
 
     return {
-        title: workout.name,
+        title: workout.name || workout.name,
         description: workout.description,
     };
 }
@@ -65,7 +77,7 @@ export default async function WorkoutDetails({
                 <div className="relative aspect-square overflow-hidden rounded-3xl border border-[#272b32] bg-[#15181d] lg:sticky lg:top-24">
                     <Image
                         src={workout.image}
-                        alt={workout.name}
+                        alt={workout.name || workout.name}
                         fill
                         priority
                         sizes="(max-width: 1023px) 100vw, 50vw"
@@ -89,7 +101,7 @@ export default async function WorkoutDetails({
 
                     {/* Title */}
                     <h1 className="mb-4 text-3xl font-black uppercase leading-tight sm:text-4xl lg:text-5xl">
-                        {workout.name}
+                        {workout.name || workout.name}
                     </h1>
 
                     {/* Description */}
@@ -161,7 +173,7 @@ export default async function WorkoutDetails({
                         </h2>
 
                         <ol className="space-y-4">
-                            {workout.instructions.map((step, index) => (
+                            {workout.instructions?.map((step, index) => (
                                 <li
                                     key={`${step}-${index}`}
                                     className="flex items-start gap-3 text-sm leading-6 text-gray-300 sm:text-base"

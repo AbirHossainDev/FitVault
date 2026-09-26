@@ -63,20 +63,22 @@ const Navbar = () => {
                 <div className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-1 md:flex">
                     <Link
                         href="/"
-                        className={`rounded-full px-4 py-2 text-xs font-semibold transition ${isWorkoutPage
+                        className={`rounded-full px-4 py-2 text-xs font-semibold transition ${
+                            isWorkoutPage
                                 ? "bg-[#17210d] text-[#ccff00]"
                                 : "text-[#999ca3] hover:text-white"
-                            }`}
+                        }`}
                     >
                         Workout
                     </Link>
 
                     <Link
                         href="/my-plan"
-                        className={`rounded-full px-4 py-2 text-xs font-semibold transition ${isMyPlanPage
+                        className={`rounded-full px-4 py-2 text-xs font-semibold transition ${
+                            isMyPlanPage
                                 ? "bg-[#17210d] text-[#ccff00]"
                                 : "text-[#999ca3] hover:text-white"
-                            }`}
+                        }`}
                     >
                         My Plan
                     </Link>
@@ -95,8 +97,9 @@ const Navbar = () => {
                         </span>
                     </Link>
 
+                    {/* Saved-এ ক্লিক করলে সরাসরি saved ট্যাবে যাবে */}
                     <Link
-                        href="/my-plan"
+                        href="/my-plan?tab=saved"
                         className="flex items-center gap-2 text-xs font-medium text-[#d0d1d4] transition hover:text-white"
                     >
                         <span>Saved</span>
@@ -121,8 +124,9 @@ const Navbar = () => {
                         </span>
                     </Link>
 
+                    {/* Mobile Saved-এ ক্লিক করলে saved ট্যাবে যাবে */}
                     <Link
-                        href="/my-plan"
+                        href="/my-plan?tab=saved"
                         aria-label={`Saved workouts: ${saved.length}`}
                         className="flex items-center gap-2 text-[12px] font-semibold text-[#d0d1d4]"
                     >
@@ -140,10 +144,11 @@ const Navbar = () => {
                         <Link
                             href="/"
                             onClick={closeMenu}
-                            className={`block px-4 py-3.5 text-[13px] font-medium transition ${isWorkoutPage
+                            className={`block px-4 py-3.5 text-[13px] font-medium transition ${
+                                isWorkoutPage
                                     ? "text-[#ccff00]"
                                     : "text-[#e5e7eb] hover:bg-[#22252b]"
-                                }`}
+                            }`}
                         >
                             Workouts
                         </Link>
@@ -151,10 +156,11 @@ const Navbar = () => {
                         <Link
                             href="/my-plan"
                             onClick={closeMenu}
-                            className={`block px-4 py-3.5 text-[13px] font-medium transition ${isMyPlanPage
+                            className={`block px-4 py-3.5 text-[13px] font-medium transition ${
+                                isMyPlanPage
                                     ? "text-[#ccff00]"
                                     : "text-[#e5e7eb] hover:bg-[#22252b]"
-                                }`}
+                            }`}
                         >
                             My Plan
                         </Link>

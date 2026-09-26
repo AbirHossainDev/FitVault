@@ -1,10 +1,21 @@
 import { Workout } from "@/types/workout";
 
-const API = "https://api.abcz.workers.dev/api/fitlog";
+const API = "https://api.api-store.workers.dev/api/fitlog";
 
-type ApiWorkout = Omit<Workout, "id" | "category"> & {
+type ApiWorkout = {
   id: string | number;
+  name: string;
+  image: string;
   muscleGroups: string[];
+  equipment: string;
+  difficulty: "Beginner" | "Intermediate" | "Advanced" | string;
+  duration: number;
+  caloriesBurned: number;
+  sets: number;
+  reps: string;
+  rating: number;
+  description: string;
+  instructions: string[];
 };
 
 export async function getWorkouts(): Promise<Workout[]> {
@@ -21,6 +32,7 @@ export async function getWorkouts(): Promise<Workout[]> {
   return data.map((workout) => ({
     ...workout,
     id: String(workout.id),
+    title: workout.name, 
     category: workout.muscleGroups,
   }));
 }
