@@ -1,0 +1,15 @@
+@import "tailwindcss";
+@media (max-width: 640px) {
+    .Toastify__toast-container {
+        width: calc(100% - 24px);
+        left: 12px;
+        right: 12px;
+        top: 76px;
+    }
+
+    .Toastify__toast {
+        width: 100%;
+        margin-bottom: 8px;
+        border-radius: 12px;
+    }
+}
